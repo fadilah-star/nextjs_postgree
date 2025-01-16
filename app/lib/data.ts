@@ -1,4 +1,5 @@
 import { sql } from '@vercel/postgres';
+import { neon } from "@neondatabase/serverless";
 import {
   CustomerField,
   CustomersTableType,
@@ -17,11 +18,15 @@ export async function fetchRevenue() {
     // console.log('Fetching revenue data...');
     // await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    const data = await sql<Revenue>`SELECT * FROM revenue`;
+    // const data = await sql<Revenue>`SELECT * FROM revenue`;
+
 
     // console.log('Data fetch completed after 3 seconds.');
+    const sql = neon(process.env.DATABASE_URL || "default_connection_string");
+    const data = await sql`SELECT * FROM revenue;`;
 
-    return data.rows;
+
+    return data;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch revenue data.');
